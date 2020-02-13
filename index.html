@@ -1,0 +1,120 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="css.css" />
+	<link rel="stylesheet" href="jquery-ui.css">
+<script src="jq1.9.js"></script>
+<script src="jquery-ui.js"></script>
+<!-- <script src="https://code.jquery.com/ui/1.8.16/jquery-ui.js"></script> -->
+<script>
+$(function(){
+
+		function readURL(input) {
+		    if (input.files && input.files[0]) {
+		        var reader = new FileReader();
+
+		        reader.onload = function (e) {
+		            $('#blah').attr('src', e.target.result);
+		        }
+
+		        reader.readAsDataURL(input.files[0]);
+		    }
+		}
+
+		$("#imgInp").change(function(){
+		    readURL(this);
+		});
+
+
+
+$(document).ready(function () {
+
+    var x = null;
+
+    //Make element draggable
+    $(".drag").draggable({
+        helper: 'clone',
+        cursor: 'move',
+        tolerance: 'fit',
+		stack: '.drag',
+		revert: "invalid"
+    });
+
+    $("#droppable").droppable({
+
+        drop: function (e, ui) {
+
+            if ($(ui.draggable)[0].id != "") {
+                x = ui.helper.clone();
+                ui.helper.remove();
+                
+
+            x.draggable({             
+                //helper: 'original',
+                containment: '#droppable',
+                tolerance: 'fit',
+				stack: '.drag'
+            });
+
+            x.resizable({
+             
+              animate: true,
+              //aspectRatio: 16 / 9,
+
+              helper: "ui-resizable-helper",
+              handles: "n, e, s, w, nw, ne, sw,se"
+            });
+            x.appendTo('#droppable');
+        }
+
+        }
+    });
+
+
+});
+
+$(document).mousedown(function(e) {            
+if( $(e.target).is("#droppable .drag img") ) { // if this then the big book one works as the image is picking up the click       
+    $(e.target).parent().find(".ui-resizable-handle").show(); // as img is sibling to handles, you need to get the parent, then do the find. 
+	$("#tools").show();
+}
+else {
+    //$("#droppable").find(".ui-resizable-handle").hide();
+	//$("#tools").hide();
+}
+
+});
+
+
+	$(function(){
+	    $('#flip').click(function(e){
+			$('#droppable .img').addClass('drag2');
+	    });
+	});
+
+})
+</script>
+
+</head>
+<body>
+
+<div style="position: relative;;">
+<form method="post" enctype="multipart/form-data">
+    <input type="file" id="imgInp" />
+    <img id="blah" src="#" alt="загрузить картинку" />
+</form>
+
+
+<div id="drag1" class="drag" style="background-position:center;">
+	<img class="img" width="100" src="z1.png" >
+</div>
+
+<div id="drag2" class="drag" style="background-image:url(z2.png); background-position:center;" ></div>
+
+<div class="col" id="droppable">
+	<div class="toolsTop" id="tools"><button id="flip" >Flip</button></div>
+</div>
+</div>
+</body>
+</html>
